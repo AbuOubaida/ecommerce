@@ -73,10 +73,10 @@ return [
         ],
         // modified by abu Oubaida(Dev) for admin middleware
         // step-2: for admin middleware
-        'admin' => [
+        'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\admin::class,
-        ]
+        ],
         // next-> step-3 (app\Http\Kernel.php)
 
         // 'users' => [
