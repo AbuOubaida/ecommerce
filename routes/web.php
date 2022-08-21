@@ -3,16 +3,6 @@
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,8 +20,16 @@ Route::prefix('admin/')->group(function (){
         //Admin Login Route without admin group
         Route::match(['get','post'],'login','login');
 
-        //Admin dashboard Route without admin group
-        Route::get('dashboard','dashboard');
+        // For admin role
+        // modified by abu Oubaida(Dev) for admin middleware
+        // step-1 to step-8
+        // Create admin middleware please flow auth.php step-1 (config/auth.php)
+        // step-8: from (app/Http/Middleware/Admin.php)
+        Route::group(['middleware'=>['admin']],function(){
+            //Admin dashboard Route without admin group
+            Route::get('dashboard','dashboard');
+        });
+
     });
 });
 

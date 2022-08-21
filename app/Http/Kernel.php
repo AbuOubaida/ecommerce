@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Admin;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -63,5 +64,10 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        // modified by abu Oubaida(Dev) for admin middleware
+        // step-3: make middleware Admin (php artisan make:middleware Admin)
+        // step-4:
+        'admin' => Admin::class,
+        // next-> step-5: go to Admin middleware (app/Http/Middleware/Admin.php)
     ];
 }

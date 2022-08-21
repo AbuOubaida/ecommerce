@@ -40,6 +40,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        // modified by abu Oubaida(Dev) for admin middleware
+        // step-1: for admin middleware
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+        // next-> step-2 (in here)
     ],
 
     /*
@@ -64,6 +71,13 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        // modified by abu Oubaida(Dev) for admin middleware
+        // step-2: for admin middleware
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\admin::class,
+        ]
+        // next-> step-3 (app\Http\Kernel.php)
 
         // 'users' => [
         //     'driver' => 'database',
