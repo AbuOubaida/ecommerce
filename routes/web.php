@@ -17,7 +17,7 @@ Route::prefix('admin/')->group(function (){
     Route::resource('admin',AdminController::class);
     Route::controller(AdminController::class)->group(function (){
         //Admin Login Route without admin group
-        Route::match(['get','post'],'login','login');
+        Route::match(['get','post'],'login','login')->name('admin.login');
 
         ################
         // For admin role
@@ -38,6 +38,8 @@ Route::prefix('admin/')->group(function (){
 
             //Admin dashboard Route without admin group
             Route::get('dashboard','dashboard')->name('admin.dashboard');
+            //Admin logout
+            Route::match(['get','post'],'logout','logout')->name('admin.logout');
         });//=======End admin role=======
         // step-9: exit
 
