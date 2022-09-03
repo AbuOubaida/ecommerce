@@ -39,6 +39,15 @@
                             </button>
                         </div>
                         @endif
+                        @if($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul>
+                                @foreach($errors->all() as $error)
+                                    <li>{{$error}}</li>
+                                @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <form class="pt-3" action="{{route('admin.login')}}" method="post">
                             @csrf
                             <div class="form-group">
