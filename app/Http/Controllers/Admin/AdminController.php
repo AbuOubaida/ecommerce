@@ -22,10 +22,17 @@ class AdminController extends Controller
     {
         if ($request->isMethod('post'))
         {
-            $validated = $request->validate([
-                'email'     =>  'required|email|unique:admins|max:255',
+            $rules = [
+                'email'     =>  'required|email|max:255',
                 'password'  =>  'required',
-            ]);
+            ];
+            $messages = [
+                'email.required'    =>  'Email address is required',
+                'email.email'       =>  'Valid email address is required',
+                'email.max'         =>  'Email length maximum is 255',
+                'password.required' =>  'Password is required',
+            ];
+            $this->validate($request,$rules,$messages);
             try {
                 extract($request->post());
                 if (Auth::guard('admin')->attempt(['email'=>$email,'password'=>$password,'status'=>1]))
