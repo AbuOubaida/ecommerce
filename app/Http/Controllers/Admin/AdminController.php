@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Admin;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 //use App\Models\admin;
@@ -14,18 +18,18 @@ class AdminController extends Controller
     {
 
     }
-    public function updateAdminPassword()
+    public function updateAdminPassword(): Factory|View|Application
     {
         $adminDetails = \App\Models\admin::where('email',Auth::guard('admin')->user()->email)->first();
         return view('admin.settings.update_admin_password',compact('adminDetails'));
     }
     //
-    public function dashboard()
+    public function dashboard(): Factory|View|Application
     {
         return view('admin.dashboard');
     }
     // For admin login page view
-    public function login(Request $request)
+    public function login(Request $request): View|Factory|RedirectResponse|Application
     {
         if ($request->isMethod('post'))
         {
@@ -57,7 +61,7 @@ class AdminController extends Controller
         }
         return view('admin.login');
     }
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::guard('admin')->logout();
         return redirect()->route('admin.login');
