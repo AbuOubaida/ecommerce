@@ -45,7 +45,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="oldPass">Current Password</label>
-                                <input type="password" class="form-control" name="oldPass" id="oldPass" placeholder="Current Password" required autocomplete="off" onkeyup="return adminCurrentPasswordCheck(this)">
+                                <input type="password" class="form-control" name="oldPass" id="oldPass" placeholder="Current Password" required autocomplete="off" onkeyup="return adminCurrentPasswordCheck(this,'message')">
+                                <div class="" id="message"></div>
                             </div>
                             <div class="form-group">
                                 <label for="newPass">New Password</label>

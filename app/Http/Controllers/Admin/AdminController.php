@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use phpDocumentor\Reflection\Types\True_;
 
 //use App\Models\admin;
 
@@ -30,7 +31,10 @@ class AdminController extends Controller
         extract($request->post());
         if (Hash::check($v,Auth::guard('admin')->user()->password))
         {
-
+            return 'true';
+        }
+        else{
+            return 'false';
         }
     }
     //
