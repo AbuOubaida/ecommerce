@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Admin;
+use App\Rules\Html;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -17,12 +18,49 @@ use phpDocumentor\Reflection\Types\True_;
 
 class AdminController extends Controller
 {
+    private $html = null;
+    public function __construct()
+    {
+        $this->html = new Html;
+    }
     public function show()
     {
 
     }
-    public function updateAdminPassword(): Factory|View|Application
+    public function updateAdminPassword(Request $request)
     {
+        if ($request->isMethod('post'))
+        {
+            $rules = [
+                'oldPass' => ['required',$this->html],
+                'newPass' => ['required','min:6',$this->html],
+                'conPass' => ['required','min:6','same:newPass',$this->html]
+            ];
+            $message = [
+                'oldPass.required' => 'Current password is required.',
+                'newPass.required' => 'New password is required.',
+                'newPass.min' => 'The new password must be at least 6 characters.',
+                'conPass.required' => 'Conform password is required.',
+                'conPass.min' => 'The conform password must be at least 6 characters.',
+                'conPass.same'     => "New Password and conform password doesn't match."
+            ];
+            $this->validate($request,$rules,$message);
+            try {
+                extract($request->post());
+                if (Hash::check($oldPass,Auth::guard('admin')->user()->password))
+                {
+                    \App\Models\admin::where('id',Auth::guard('admin')->user()->id)->update([
+                        'password' => Hash::make($newPass)
+                    ]);
+                    return back()->with('success','Password update successfully.');
+                }else{
+                    return back()->with('error',"Current password doesn't match.");
+                }
+            }catch (\Throwable $exception)
+            {
+                return back()->with('error',$exception->getMessage())->withInput();
+            }
+        }
         $adminDetails = \App\Models\admin::where('email',Auth::guard('admin')->user()->email)->first();
         return view('admin.settings.update_admin_password',compact('adminDetails'));
     }

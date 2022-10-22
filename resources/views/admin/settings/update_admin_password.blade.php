@@ -8,24 +8,6 @@
                         <h3 class="font-weight-bold">Settings</h3>
 {{--                        <h6 class="font-weight-normal mb-0">Update admin password</h6>--}}
                     </div>
-                    <div class="col-12 col-xl-4">
-                        <div class="justify-content-end d-flex">
-                            <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                                <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button"
-                                        id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="true">
-                                    <i class="mdi mdi-calendar"></i> Today (10 Jan 2021)
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right"
-                                     aria-labelledby="dropdownMenuDate2">
-                                    <a class="dropdown-item" href="#">January - March</a>
-                                    <a class="dropdown-item" href="#">March - June</a>
-                                    <a class="dropdown-item" href="#">June - August</a>
-                                    <a class="dropdown-item" href="#">August - November</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -34,7 +16,59 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Update admin password</h4>
-                        <form class="forms-sample">
+                        <div class="row">
+                            {{--                For Error message Showing--}}
+                            @if ($errors->any())
+                            <div class="col-md-12">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                @foreach ($errors->all() as $error)
+                                    <div>{{$error}}</div>
+                                @endforeach
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                            </div>
+                            @endif
+                            {{--                For Insert message Showing--}}
+                            @if (session('success'))
+                                <div class="col-12">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <div>{{session('success')}}</div>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            @endif
+                            {{--                For Insert message Showing--}}
+                            @if (session('error'))
+                                <div class="col-12">
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <div>{{session('error')}}</div>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            @endif
+                            @if (session('warning'))
+                                <div class="col-12">
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <div>{{session('warning')}}</div>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            @endif
+                        </div>
+                        <form class="forms-sample" method="post" action="{{route("update.admin.password")}}" id="updateAdminPassword" name="updateAdminPassword">
+                            @csrf
                             <div class="form-group">
                                 <label for="username">Admin Username/Email</label>
                                 <input type="text" class="form-control" id="username" placeholder="Username" value="{{$adminDetails->email}}" readonly="readonly">
@@ -56,14 +90,9 @@
                                 <label for="conPass">Confirm Password</label>
                                 <input type="password" name="conPass" class="form-control" id="conPass" placeholder="Confirm Password" required autocomplete="off">
                             </div>
-                            <div class="form-check form-check-flat form-check-primary">
-                                <label class="form-check-label">
-                                    <input type="checkbox" class="form-check-input">
-                                    Remember me
-                                    <i class="input-helper"></i></label>
-                            </div>
-                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                            <button class="btn btn-light">Cancel</button>
+
+                            <button type="submit" class="btn btn-primary mr-2" name="updatePassword">Submit</button>
+                            <button class="btn btn-light" type="reset">Reset</button>
                         </form>
                     </div>
                 </div>
