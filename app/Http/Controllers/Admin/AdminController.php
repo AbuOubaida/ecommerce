@@ -75,6 +75,46 @@ class AdminController extends Controller
             return 'false';
         }
     }
+    public function updateAdminDetails(Request $request)
+    {
+        if ($request->isMethod('post'))
+        {
+            $rules = [
+              'name'    => ['required','regex:/^[\pL\s\-]+$/u',$this->html],
+              'mobile'  => ['required','min:10','max:14','regex:/(0)[0-9]/', $this->html]
+            ];
+            $message = [
+                'name.required'     => "Name is required.",
+                'name.regex'        => "Valid Name is required",
+                'mobile.required'   => "Mobile number is required.",
+                'mobile.min'        => "Mobile number will be minimum 10 digit.",
+                'mobile.max'        => "Mobile number will be maximum 14 digit.",
+                'mobile.numeric'    => "Mobile number must be numeric.",
+                'mobile.regex'      => "Mobile number must be numeric.",
+            ];
+            $this->validate($request,$rules,$message);
+            try {
+                extract($request->post());
+                \App\Models\admin::where('id',Auth::guard('admin')->user()->id)->update(
+                    [
+                        'name'   =>  $name,
+                        'mobile' =>  $mobile
+                    ]);
+                return back()->with("success","Data update successfully");
+            }catch (\Throwable $exception)
+            {
+                return back()->with('error',$exception->getMessage());
+            }
+        }else{
+            try {
+                $adminData = Auth::guard('admin')->user()->first();
+                return \view("admin.settings.update_admin_details",compact('adminData'));
+            }catch (\Throwable $exception)
+            {
+                return back()->with('error',$exception->getMessage());
+            }
+        }
+    }
     //
     public function dashboard(): Factory|View|Application
     {

@@ -38,9 +38,13 @@ Route::prefix('admin/')->group(function (){
 
             //Admin dashboard Route without admin group
             Route::get('dashboard','dashboard')->name('admin.dashboard');
+
             //Update Admin Password
             Route::match(['get','post'],'update-admin-password','updateAdminPassword')->name('update.admin.password');
             Route::post('check-current-password','checkCurrentPassword')->name('admin.check.current.password');
+
+            //Update admin details
+            Route::match(['get','post'],'update-admin-details','updateAdminDetails')->name("update.admin.details");
             //Admin logout
             Route::match(['get','post'],'logout','logout')->name('admin.logout');
         });//=======End admin role=======
