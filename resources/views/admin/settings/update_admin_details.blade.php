@@ -37,7 +37,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="profile">Profile Photo</label>
-                                <input type="file" name="profile" class="form-control" id="profile">
+                                <input type="file" name="profile" class="form-control" id="profile" onchange="return previewFile(this)">
+                                @if(!empty(\Illuminate\Support\Facades\Auth::guard('admin')->user()->image))
+                                    <img id="previewImg" src="{{url("admin/images/uploaded/profile/".Auth::guard('admin')->user()->image)}}" alt="Admin Profile Image" width="20%">
+                                @endif
                             </div>
                             <button type="submit" class="btn btn-success mr-2" name="update">Update</button>
                         </form>
