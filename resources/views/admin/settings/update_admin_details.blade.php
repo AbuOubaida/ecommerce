@@ -16,7 +16,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Update admin Details</h4>
-                        <form class="forms-sample" method="post" action="{{route("update.admin.details")}}" id="updateAdminInfo" name="updateAdminInfo">
+                        <form class="forms-sample" method="post" action="{{route("update.admin.details")}}" id="updateAdminInfo" name="updateAdminInfo" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="email">Email</label>
@@ -33,7 +33,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="mobile">Mobile</label>
-                                <input type="number" name="mobile" class="form-control" id="mobile" value="{{$adminData->mobile}}" placeholder="Mobile" >
+                                <input type="number" name="mobile" class="form-control" id="mobile" value="{{$adminData->mobile}}" placeholder="Mobile" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="profile">Profile Photo</label>
+                                <input type="file" name="profile" class="form-control" id="profile">
                             </div>
                             <button type="submit" class="btn btn-success mr-2" name="update">Update</button>
                         </form>
