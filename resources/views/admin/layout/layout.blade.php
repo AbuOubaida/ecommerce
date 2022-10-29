@@ -11,7 +11,7 @@
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_settings-panel.html -->
-        @include('admin.layout._settings-panel')
+{{--        @include('admin.layout._settings-panel')--}}
         <!-- partial -->
         <!-- partial:partials/_sidebar.html -->
         @include('admin.layout._sidebar')
