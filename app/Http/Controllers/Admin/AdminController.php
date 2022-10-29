@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Admin;
 use App\Rules\Html;
+use Intervention\Image\Facades\Image;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -19,6 +20,7 @@ use phpDocumentor\Reflection\Types\True_;
 class AdminController extends Controller
 {
     private $html = null;
+    private $adminProfilePath = 'admin/images/uploaded/profile/';
     public function __construct()
     {
         $this->html = new Html;
@@ -80,8 +82,9 @@ class AdminController extends Controller
         if ($request->isMethod('post'))
         {
             $rules = [
-              'name'    => ['required','regex:/^[\pL\s\-]+$/u',$this->html],
-              'mobile'  => ['required','min:10','max:14','regex:/(0)[0-9]/', $this->html]
+                'name'    => ['required','regex:/^[\pL\s\-]+$/u',$this->html],
+                'mobile'  => ['required','min:10','max:14','regex:/(0)[0-9]/', $this->html],
+                'profile' => ['mimes:jpeg,jpg,png,gif','sometimes','nullable','max:1024']
             ];
             $message = [
                 'name.required'     => "Name is required.",
@@ -91,14 +94,30 @@ class AdminController extends Controller
                 'mobile.max'        => "Mobile number will be maximum 14 digit.",
                 'mobile.numeric'    => "Mobile number must be numeric.",
                 'mobile.regex'      => "Mobile number must be numeric.",
+                'profile.mimes'     => "Profile image type must be .pjeg, .jpg, .png, .gif.",
+                'profile.max'       => "Profile image size must be <= 1MB",
             ];
             $this->validate($request,$rules,$message);
             try {
                 extract($request->post());
+                $img_name = Auth::guard('admin')->user()->image;
+                if ($request->hasFile('profile'))
+                {
+                    extract($request->file());
+                    if (@$profile)
+                    {
+                        $ext = $profile->getClientOriginalExtension();
+                        $img_name = str_replace(' ','_',$name).'_'.rand(111,99999).'_'.$profile->getClientOriginalName();
+                        $imageUploadPath = $this->adminProfilePath.$img_name;
+
+                        Image::make($profile)->save($imageUploadPath);
+                    }
+                }
                 \App\Models\admin::where('id',Auth::guard('admin')->user()->id)->update(
                     [
                         'name'   =>  $name,
-                        'mobile' =>  $mobile
+                        'mobile' =>  $mobile,
+                        'image'  =>  $img_name
                     ]);
                 return back()->with("success","Data update successfully");
             }catch (\Throwable $exception)
