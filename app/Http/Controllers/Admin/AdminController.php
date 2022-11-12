@@ -126,7 +126,7 @@ class AdminController extends Controller
             }
         }else{
             try {
-                $adminData = Auth::guard('admin')->user()->first();
+                $adminData = \App\Models\admin::where('email',Auth::guard('admin')->user()->email)->first();
                 return \view("admin.settings.update_admin_details",compact('adminData'));
             }catch (\Throwable $exception)
             {

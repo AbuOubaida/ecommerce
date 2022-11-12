@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder
 
         // \App\Models\User::factory(10)->create();
 
+        ########################
+//        Add vendor data
+        $this->call(VendorsTableSeeder::class);
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',

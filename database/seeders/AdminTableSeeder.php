@@ -20,7 +20,7 @@ class AdminTableSeeder extends Seeder
         //step-3:
         $adminRecords = [
             [
-                'id'        =>  1,
+//                'id'        =>  1,
                 'name'      =>  'Super Admin',
                 'type'      =>  'superadmin',
                 'vendor_id' =>  0,
@@ -30,8 +30,21 @@ class AdminTableSeeder extends Seeder
                 'status'    =>  1,
             ],
         ];
+
         admin::insert($adminRecords);
         // step-4: Go to database/seeders/DatabaseSeeder.php
 
+        $vendorRecords = [
+            [
+                'name'      =>  'Oubaida',
+                'type'      =>  'vendor',
+                'vendor_id' =>  1,
+                'mobile'    =>  '01778138129',
+                'email'     =>  'abuoubaida37@gmail.com',
+                'password'  =>  Hash::make('12345678'),
+                'status'    =>  0,
+            ],
+        ];
+//        admin::insert($vendorRecords);
     }
 }

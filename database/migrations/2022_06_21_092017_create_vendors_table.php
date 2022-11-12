@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("address");
-            $table->string("collection_point_1");
+            $table->string("collection_point_1")->nullable();
             $table->string("collection_point_2")->nullable();
             $table->string("collection_point_3")->nullable();
             $table->string("city");
