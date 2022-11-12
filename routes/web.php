@@ -45,6 +45,10 @@ Route::prefix('admin/')->group(function (){
 
             //Update admin details
             Route::match(['get','post'],'update-admin-details','updateAdminDetails')->name("update.admin.details");
+
+            //Update Vendor details
+            Route::match(['get','post'],'update-vendor-details/{slug}','updateVendorDetails')->name('update.vendor.details');
+
             //Admin logout
             Route::match(['get','post'],'logout','logout')->name('admin.logout');
         });//=======End admin role=======

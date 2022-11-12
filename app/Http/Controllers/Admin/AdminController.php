@@ -172,6 +172,23 @@ class AdminController extends Controller
         }
         return view('admin.login');
     }
+    //Update vendor details
+    public function updateVendorDetails(Request $request,$slug)
+    {
+       if( strtolower($slug) == 'personal')
+       {
+
+       }elseif (strtolower($slug) == 'business')
+       {
+
+       }elseif (strtolower($slug) == 'bank')
+       {
+
+       }else{
+           return back();
+       }
+    }
+
     public function logout(Request $request): RedirectResponse
     {
         Auth::guard('admin')->logout();
