@@ -16,7 +16,7 @@
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item"> <a class="nav-link" href="{{route("update.admin.password")}}">Change Password</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{route("update.vendor.details",['slug'=>'personal'])}}">Account Details</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{route("update.vendor.details",['slug'=>'personal'])}}">Personal Details</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{route("update.vendor.details",['slug'=>'business'])}}">Business Details</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{route("update.vendor.details",['slug'=>'bank'])}}">Bank Details</a></li>
                 </ul>

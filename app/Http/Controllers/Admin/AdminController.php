@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Admin;
+use App\Models\vendor;
 use App\Rules\Html;
 use Intervention\Image\Facades\Image;
 use Illuminate\Contracts\Foundation\Application;
@@ -77,8 +78,26 @@ class AdminController extends Controller
             return 'false';
         }
     }
+    private function isAdmin()
+    {
+        if (Auth::guard('admin')->user()->type != 'superadmin' || Auth::guard('admin')->user()->type != 'admin')
+        {
+            return false;
+        }
+    }
+    private function isVendor()
+    {
+        if (Auth::guard('admin')->user()->type != 'vendor')
+        {
+            return false;
+        }
+    }
     public function updateAdminDetails(Request $request)
     {
+        if(!$this->isAdmin())
+        {
+            return back();
+        }
         if ($request->isMethod('post'))
         {
             $rules = [
@@ -177,7 +196,56 @@ class AdminController extends Controller
     {
        if( strtolower($slug) == 'personal')
        {
-
+           //Post vendor data
+           if ($request->isMethod('post'))
+           {
+               $rules = [
+                   'name'      =>  ['required','max:255',$this->html],
+                   'mobile'    =>  ['required','min:10','max:14','regex:/(0)[0-9]/', $this->html],
+                   'address'   =>  ['required', $this->html],
+                   'collection_point_1'   =>  ['sometimes','nullable', $this->html],
+                   'collection_point_2'   =>  ['sometimes','nullable', $this->html],
+                   'collection_point_3'   =>  ['sometimes','nullable', $this->html],
+                   'city'      =>  ['required','max:255', $this->html],
+                   'state'     =>  ['required','max:255', $this->html],
+                   'country'   =>  ['required','max:255', $this->html],
+                   'pincode'   =>  ['required','max:255', $this->html],
+               ];
+               $this->validate($request,$rules);
+               try {
+                   extract($request->post());
+                   $adminVendorData = [
+                       'name'      =>  $name,
+                       'mobile'    =>  $mobile,
+                   ];
+                   //Update admin table
+                   \App\Models\admin::where('id',Auth::guard('admin')->user()->id)->update($adminVendorData);
+                   $vendorData = [
+                       'name'      =>  $name,
+                       'mobile'    =>  $mobile,
+                       'address'   =>  $address,
+                       'city'      =>  $city,
+                       'state'     =>  $state,
+                       'country'   =>  $country,
+                       'pincode'   =>  $pincode,
+                       'collection_point_1'   =>  $collection_point_1,
+                       'collection_point_2'   =>  $collection_point_2,
+                       'collection_point_3'   =>  $collection_point_3,
+                   ];
+                   //Update vendor table
+                   vendor::where('id',Auth::guard('admin')->user()->vendor_id)->update($vendorData);
+                   return back()->with('success','Data update successfully.');
+               }catch (\Throwable $exception)
+               {
+                   return back()->with('error',$exception->getMessage());
+               }
+           }
+           try {
+               $vendorDetails = vendor::where('id',Auth::guard('admin')->user()->vendor_id)->first();
+           }catch (\Throwable $exception)
+           {
+               return back()->with('error',$exception->getMessage());
+           }
        }elseif (strtolower($slug) == 'business')
        {
 
@@ -187,6 +255,7 @@ class AdminController extends Controller
        }else{
            return back();
        }
+       return view('admin.settings.update_vendor_details',compact('slug','vendorDetails'));
     }
 
     public function logout(Request $request): RedirectResponse
