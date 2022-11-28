@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Admin;
 use App\Models\vendor;
+use App\Models\vendors_business_details;
 use App\Rules\Html;
 use Intervention\Image\Facades\Image;
 use Illuminate\Contracts\Foundation\Application;
@@ -210,13 +211,39 @@ class AdminController extends Controller
                    'state'     =>  ['required','max:255', $this->html],
                    'country'   =>  ['required','max:255', $this->html],
                    'pincode'   =>  ['required','max:255', $this->html],
+                   'profile' => ['mimes:jpeg,jpg,png,gif','sometimes','nullable','max:1024']
                ];
-               $this->validate($request,$rules);
+               $message = [
+                   'name.required'     => "Name is required.",
+                   'name.regex'        => "Valid Name is required",
+                   'mobile.required'   => "Mobile number is required.",
+                   'mobile.min'        => "Mobile number will be minimum 10 digit.",
+                   'mobile.max'        => "Mobile number will be maximum 14 digit.",
+                   'mobile.numeric'    => "Mobile number must be numeric.",
+                   'mobile.regex'      => "Mobile number must be numeric.",
+                   'profile.mimes'     => "Profile image type must be .pjeg, .jpg, .png, .gif.",
+                   'profile.max'       => "Profile image size must be <= 1MB",
+               ];
+               $this->validate($request,$rules,$message);
                try {
                    extract($request->post());
+                   $img_name = Auth::guard('admin')->user()->image;
+                   if ($request->hasFile('profile'))
+                   {
+                       extract($request->file());
+                       if (@$profile)
+                       {
+                           $ext = $profile->getClientOriginalExtension();
+                           $img_name = str_replace(' ','_',$name).'_'.rand(111,99999).'_'.$profile->getClientOriginalName();
+                           $imageUploadPath = $this->adminProfilePath.$img_name;
+
+                           Image::make($profile)->save($imageUploadPath);
+                       }
+                   }
                    $adminVendorData = [
-                       'name'      =>  $name,
-                       'mobile'    =>  $mobile,
+                       'name'   =>  $name,
+                       'mobile' =>  $mobile,
+                       'image'  =>  $img_name
                    ];
                    //Update admin table
                    \App\Models\admin::where('id',Auth::guard('admin')->user()->id)->update($adminVendorData);
@@ -248,6 +275,13 @@ class AdminController extends Controller
            }
        }elseif (strtolower($slug) == 'business')
        {
+           try {
+               $vendorDetails = vendors_business_details::where('vendor_id',Auth::guard('admin')->user()->vendor_id)->first();
+
+           }catch (\Throwable $exception)
+           {
+               return back()->with('error',$exception->getMessage());
+           }
 
        }elseif (strtolower($slug) == 'bank')
        {
